@@ -9,6 +9,11 @@ AllCops:
     - "db/schema.rb"
     - "db/migrate/*"
     - "bin/*"
+    # Overriding Exclude drops RuboCop's defaults, so restore the ones
+    # that matter: CI installs gems into vendor/bundle inside the repo.
+    - "vendor/**/*"
+    - "node_modules/**/*"
+    - "tmp/**/*"
 
 Style/Documentation:
   Enabled: false
