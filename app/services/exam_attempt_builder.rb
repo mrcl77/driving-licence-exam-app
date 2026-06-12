@@ -86,7 +86,9 @@ class ExamAttemptBuilder
     selected = []
 
     rules.each do |rule|
-      candidates = scoped_questions(scope).where(question_weight: rule.question_weight).where.not(id: selected.map(&:id))
+      candidates = scoped_questions(scope)
+                   .where(question_weight: rule.question_weight)
+                   .where.not(id: selected.map(&:id))
       return nil if candidates.count < rule.questions_count
 
       selected.concat(sample_relation(candidates, rule.questions_count))
@@ -104,7 +106,7 @@ class ExamAttemptBuilder
       raise BuildError, I18n.t(
         'ui.errors.insufficient_questions',
         locale_code: @locale.upcase,
-        scope: scope_label,
+        scope_label: scope_label,
         available: available,
         required: required_count
       )
@@ -138,7 +140,10 @@ class ExamAttemptBuilder
 
   def rules_for_scope(scope)
     @rules_for_scope ||= {}
-    @rules_for_scope[scope] ||= @exam_blueprint.exam_blueprint_rules.where(scope: ExamBlueprintRule.scopes.fetch(scope.to_s)).order(question_weight: :desc).to_a
+    @rules_for_scope[scope] ||= @exam_blueprint.exam_blueprint_rules
+                                               .where(scope: ExamBlueprintRule.scopes.fetch(scope.to_s))
+                                               .order(question_weight: :desc)
+                                               .to_a
   end
 
   def scoped_questions(scope)
@@ -158,7 +163,9 @@ class ExamAttemptBuilder
                                      .left_joins(:media_asset)
                                      .where(slot: QuestionMediaLink.slots.fetch('main'))
                                      .where(
-                                       'question_media_links.status = :missing_status OR question_media_links.media_asset_id IS NULL OR media_assets.processing_status = :media_missing_status',
+                                       'question_media_links.status = :missing_status ' \
+                                       'OR question_media_links.media_asset_id IS NULL ' \
+                                       'OR media_assets.processing_status = :media_missing_status',
                                        missing_status: QuestionMediaLink.statuses.fetch('missing'),
                                        media_missing_status: MediaAsset.processing_statuses.fetch('missing')
                                      )

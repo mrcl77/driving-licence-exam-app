@@ -3,9 +3,9 @@
 class ApplicationController < ActionController::Base
   before_action :set_interface_locale
 
-  private
-
   UI_LOCALES = %w[pl en].freeze
+
+  private
 
   def set_interface_locale
     requested = params[:ui_lang].to_s

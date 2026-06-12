@@ -7,3 +7,11 @@ AllCops:
   SuggestExtensions: false
   Exclude:
     - "db/schema.rb"
+    - "db/migrate/*"
+    - "bin/*"
+
+Style/Documentation:
+  Enabled: false
+
+Metrics:
+  Enabled: false
